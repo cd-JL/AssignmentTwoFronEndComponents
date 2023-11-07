@@ -171,7 +171,7 @@ form {
   }
   
 label {
-    display: blcok;
+    
     font-weight: bold;
     text-align: center;
     margin-right: 15px;
@@ -219,7 +219,7 @@ table.student-table td {
 }
 
 table.student-table th {
-  background-color: #f0f0f0;
+  background-color: #000000;
   font-weight: bold;
 }
 
