@@ -34,13 +34,19 @@
       "first_name": "Julien",
       "last_name": "Lam",
       "date_of_birth": "2023-11-07",
-      "current_grade": "11"
+      "current_grade": 11
     },
     {
       "first_name": "Tyler",
       "last_name": "Gettle",
       "date_of_birth": "2023-11-01",
-      "current_grade": "9"
+      "current_grade": 9
+    },
+    {
+      "first_name": "Julien",
+      "last_name": "Guy",
+      "date_of_birth": "2023-11-01",
+      "current_grade": 11
     }
   ]
 }

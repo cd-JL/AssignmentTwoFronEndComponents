@@ -14,15 +14,15 @@ app.post('/addstudent', (req, res) => {
   // Log the received student data
   console.log('Received new student data:', newStudent);
 
-  // Validate the data and collect validation errors
+  // Validate the data
   const validationErrors = validateStudentData(newStudent);
-
   if (validationErrors.length > 0) {
-    console.error('Invalid student data:', newStudent);
-    console.error('Validation errors:', validationErrors);
     res.status(400).json({ errors: validationErrors });
     return;
   }
+
+  // Explicitly parse current_grade as an integer
+  newStudent.current_grade = parseInt(newStudent.current_grade);
 
   // Read the existing students from the Students.json file
   const studentsFilePath = path.join(__dirname, './data/Students.json');
@@ -35,10 +35,8 @@ app.post('/addstudent', (req, res) => {
 
     const students = JSON.parse(data);
 
-    // Add the new student to the list if data is valid
-    if (newStudent) {
-      students.students.push(newStudent);
-    }
+    // Add the new student to the list
+    students.students.push(newStudent);
 
     // Write the updated student data back to the file
     fs.writeFile(studentsFilePath, JSON.stringify(students, null, 2), (err) => {
@@ -63,32 +61,23 @@ app.listen(port, () => {
   console.log(`Server is listening on port ${port}`);
 });
 
-// Function to validate student data and return validation errors
+// Function to validate student data
 function validateStudentData(studentData) {
   const errors = [];
 
-  if (typeof studentData.first_name !== 'string') {
-    errors.push('First name must be a string');
+  if (typeof studentData.first_name !== 'string' || !/^[a-zA-Z]*$/.test(studentData.first_name)) {
+    errors.push('First name is invalid');
   }
 
-  if (typeof studentData.last_name !== 'string') {
-    errors.push('Last name must be a string');
+  if (typeof studentData.last_name !== 'string' || !/^[a-zA-Z]*$/.test(studentData.last_name)) {
+    errors.push('Last name is invalid');
   }
 
-  if (!/^[a-zA-Z]*$/.test(studentData.first_name)) {
-    errors.push('First name can only contain letters');
+  const currentGrade = parseInt(studentData.current_grade);
+  if (isNaN(currentGrade) || currentGrade < 1 || currentGrade > 12) {
+    errors.push('Current grade is invalid. It should be a number between 1 and 12.');
   }
 
-  if (!/^[a-zA-Z]*$/.test(studentData.last_name)) {
-    errors.push('Last name can only contain letters');
-  }
-
-  if ( typeof studentData.current_grade < 1){
-    errors.push('Must be above 1');
-  }
-  
-  if ( typeof studentData.current_grade > 12){
-    errors.push('Must be below 12');
-  }
+  console.log(errors);
   return errors;
 }
